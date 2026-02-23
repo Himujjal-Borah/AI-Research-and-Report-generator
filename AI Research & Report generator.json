@@ -1,0 +1,374 @@
+{
+  "name": "AI Research & Report generator",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "AI Research & Report generator ",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Topic:",
+              "placeholder": "Enter your topic",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Email:",
+              "fieldType": "email",
+              "placeholder": "Enter your email",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "c1be29f1-3b82-4283-b8e0-7f778e1a5586",
+      "name": "On form submission",
+      "webhookId": "c0c20869-ef53-441b-8535-eb4498cbe01b"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a professional research analyst.\n\nResearch the topic: {{ $json['Topic:'] }}\n\nProvide a structured and comprehensive analysis including:\n\n1. Key facts  \n   - Definition, background, and core concepts  \n   - Important developments and context  \n\n2. Recent trends  \n   - Emerging developments  \n   - Innovations, disruptions, or shifts  \n   - Global and regional perspectives  \n\n3. Important statistics  \n   - Data points, benchmarks, or measurable insights  \n   - Growth rates, adoption, or impact indicators  \n\n4. Opportunities  \n   - Growth potential  \n   - Future applications or use cases  \n   - Areas for innovation or expansion  \n\n5. Challenges and risks  \n   - Limitations, barriers, or threats  \n   - Ethical, economic, or technological concerns  \n\n6. Future outlook  \n   - Predictions and long-term impact  \n   - Possible scenarios and strategic implications  \n\nOutput format:\n- Use clear bullet points  \n- Keep it structured and professional  \n- Avoid unnecessary explanation  \n- Focus on actionable insights  ",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "e6949641-f783-4acb-a2b8-8bedbf728d4c",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        64,
+        208
+      ],
+      "id": "766c7816-cb11-4bc4-be7c-6a987690bf74",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "YCE5NV5koV9n8iaF",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a strategic analyst.\n\nBased on the structured research:\n\n{{ $json.output }}\n\nProvide:\n1. Five key strategic insights  \n2. Implications  \n3. Future outlook  \n4. Risks and uncertainties  \n\nKeep the response concise, analytical, and structured.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        560,
+        0
+      ],
+      "id": "949db383-694d-40d6-be86-44d275002320",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        432,
+        208
+      ],
+      "id": "47d24a82-d2d5-4db7-b59c-343b42eed26f",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "YCE5NV5koV9n8iaF",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a professional and structured report writer.\n\nUsing the following research:\n{{ $('AI Agent').item.json.output }}\n\nAnd the strategic analysis:\n{{ $json.output }}\n\nWrite a comprehensive and well-structured professional report.\n\nStructure the report with clear headings:\n\n1. Executive Summary  \n   - Concise overview of the most important findings and implications  \n\n2. Overview of the Topic  \n   - Background, context, and current landscape  \n\n3. Key Insights  \n   - Major findings and strategic takeaways  \n\n4. Risks and Challenges  \n   - Critical uncertainties, barriers, and limitations  \n\n5. Opportunities and Future Potential  \n   - Growth areas, innovation, and long-term possibilities  \n\n6. Conclusion  \n   - Final synthesis and forward-looking perspective  \n\nGuidelines:\n- Use a professional and neutral tone  \n- Maintain clarity and logical flow  \n- Avoid repetition  \n- Focus on actionable and strategic insights  \n- Ensure the report is structured and easy to read  ",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        912,
+        0
+      ],
+      "id": "951a70a6-15ef-47ea-8ea7-11fcea6c8df2",
+      "name": "AI Agent2"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        784,
+        208
+      ],
+      "id": "6688d15f-2de5-473f-b3ed-30196eadea40",
+      "name": "Google Gemini Chat Model2",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "YCE5NV5koV9n8iaF",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a senior editor.\n\nImprove the following report:\n{{ $json.output }}\n\nMake it:\n- More concise\n- More professional\n- Grammatically perfect\n- Executive-ready",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        1264,
+        0
+      ],
+      "id": "7a05e3e5-f760-4dd0-807d-b23bce018855",
+      "name": "AI Agent3"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1136,
+        208
+      ],
+      "id": "fa72658b-5a3f-4c85-809e-b6250db449dd",
+      "name": "Google Gemini Chat Model3",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "YCE5NV5koV9n8iaF",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "html_content": "={{ $json.html }}",
+        "dynamic_params": {
+          "params": [
+            {
+              "key": "={{ $json.output }}",
+              "value": "={{ $json.output }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-htmlcsstopdf.htmlcsstopdf",
+      "typeVersion": 1,
+      "position": [
+        1856,
+        0
+      ],
+      "id": "8c234047-1ef9-4f5d-9063-c18a1299f0ac",
+      "name": "Convert HTML to PDF",
+      "credentials": {
+        "htmlcsstopdfApi": {
+          "id": "0xvgTV3TJYxd3HlE",
+          "name": "HTML to PDF account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "fromEmail": "mynusco<noreply@mynusco.com>",
+        "toEmail": "={{ $('On form submission').item.json['Email:'] }}",
+        "subject": "=AI research report: {{ $('On form submission').item.json['Topic:'] }}",
+        "emailFormat": "text",
+        "text": "=This is your link for pdf:  {{ $json.pdf_url }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        2064,
+        0
+      ],
+      "id": "4e89fc22-d92d-4b51-b744-8448c37482b3",
+      "name": "Send email",
+      "webhookId": "baa9b8ab-80d8-4c57-b907-8692d258e6d2",
+      "credentials": {
+        "smtp": {
+          "id": "H2EcQ4Rn9Zpgd8Ty",
+          "name": "SMTP account 4"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const markdown = $node[\"AI Agent3\"].json[\"output\"];\n\n// Simple markdown to HTML conversion\nlet html = markdown\n  .replace(/### (.*)/g, '<h3>$1</h3>')\n  .replace(/## (.*)/g, '<h2>$1</h2>')\n  .replace(/\\*\\*(.*?)\\*\\*/g, '<b>$1</b>')\n  .replace(/\\* (.*)/g, '<li>$1</li>')\n  .replace(/\\n/g, '<br>');\n\n// Wrap in professional template\nhtml = `\n<html>\n<head>\n<style>\nbody {\n  font-family: Arial, sans-serif;\n  line-height: 1.7;\n  margin: 50px;\n}\nh2 {\n  font-size: 24px;\n  color: #222;\n}\nh3 {\n  font-size: 18px;\n  color: #444;\n}\nli {\n  margin-bottom: 8px;\n}\n</style>\n</head>\n<body>\n${html}\n</body>\n</html>\n`;\n\nreturn [{ json: { html } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1616,
+        0
+      ],
+      "id": "7a258e2b-bcc5-45a0-a42e-72bcc6152558",
+      "name": "Code"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent2": {
+      "main": [
+        [
+          {
+            "node": "AI Agent3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent2",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent3": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent3",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert HTML to PDF": {
+      "main": [
+        [
+          {
+            "node": "Send email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Convert HTML to PDF",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1ed093b2-e7f9-4cbe-826e-307f0ebbd8fd",
+  "meta": {
+    "instanceId": "98d69767702960443bc016cc631c79ef990860d69de13a458dbdde00ca637322"
+  },
+  "id": "L0XpJLP3c6TwA1nk",
+  "tags": []
+}
